@@ -17,4 +17,5 @@ def vision_pubsub(image_string):
     response = client.label_detection(image=image)
 
     labels = response.label_annotations
-    return labels[0].description
+    print(labels[1].description)
+    return labels[1].description
