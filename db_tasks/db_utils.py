@@ -14,7 +14,7 @@ def save_to_db(db,user,label_name,qty=None,weight=None):
     if user:
         if check:
             db.users.update_one(
-            {"email":user.email},
+            {"email":user['email']},
             {"$push" : {
             "food_consumptions" : {"date":"2019-09-29",
             "food" : label_name.lower(),
@@ -39,3 +39,36 @@ def save_to_db(db,user,label_name,qty=None,weight=None):
             }
             }
             )
+
+    return check
+
+def finding_remaining_calories(db,user):
+    daily = db.users.find_one({"email":user['email']})["daily_calories"]
+    today_date = "2019-09-29"
+    today_total = db.users.aggregate([
+    {
+        "$match":{"email":user['email']}
+    },
+    {
+        "$unwind":"$food_consumptions"
+    },
+    {
+        "$match" : {"food_consumptions.date" : today_date}
+    },
+    {
+        "$group":{
+            "_id":"null",
+            "total":{"$sum":"$food_consumptions.calories"}
+        }
+    }
+    ])
+    for i in today_total:
+        today_total = i["total"]
+        break
+    print(today_date, today_total, daily-today_total)
+    return daily-today_total
+
+def get_recommandation(db,remaining_calories):
+    recoms = db.diets.find({"Calories (kcal)": {"$lt": remaining_calories}},
+    {"_id":0, "name":1, "Calories (kcal)":1, "emoji":1})
+    return recoms
