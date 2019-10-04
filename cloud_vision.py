@@ -3,6 +3,7 @@ import base64
 from google.cloud import vision
 import decimal
 
+
 def vision_pubsub(image_string):
     """
     Args:
@@ -13,9 +14,7 @@ def vision_pubsub(image_string):
 
     client = vision.ImageAnnotatorClient()
     image = vision.types.Image(content=frontend_image)
+    objects = client.object_localization(image=image).localized_object_annotations
 
-    response = client.label_detection(image=image)
-
-    labels = response.label_annotations
-    print(labels[1].description)
-    return labels[1].description
+#     labels = response.label_annotations
+    return objects[0].name
