@@ -35,7 +35,7 @@ In Cmd : `venv3\Scripts\activate.bat`
 
 - Request method  = POST
 
-- http://192.168.1.163:5000/add
+- http://{your ip}:5000/add
 
 - Request param 
 ```json
