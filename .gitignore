@@ -1,4 +1,9 @@
 *.json
-__pycache__
+__pycache__/
 *.pyc
 *.sh
+.vscode/
+*.pem
+venv3/
+venv*/
+env*/
